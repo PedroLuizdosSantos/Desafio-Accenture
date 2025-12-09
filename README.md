@@ -1,97 +1,112 @@
-README – Desafio Técnico Accenture
+# Desafio Técnico Accenture
 
-Este projeto foi desenvolvido para o desafio técnico da Accenture.
-A ideia foi criar um sistema completo para cadastrar empresas, fornecedores e gerenciar os vínculos entre eles.
+Este projeto foi desenvolvido para o desafio técnico da Accenture.  
+O objetivo é implementar um sistema para cadastro de empresas, fornecedores e gerenciamento de vínculos entre eles.
 
-Eu não dominava várias das tecnologias usadas aqui (principalmente Spring Boot, JPA/Hibernate, Docker e a parte de integração entre serviços). Então fui aprendendo conforme avançava no próprio projeto. Boa parte do desenvolvimento foi pesquisa, teste e correção até tudo funcionar como esperado.
+Durante o desenvolvimento, muitas tecnologias foram aprendidas na prática, como Spring Boot, JPA/Hibernate, Docker, integração entre serviços e comunicação entre Python e Java.  
+O foco foi entregar uma solução funcional, simples de executar e alinhada aos requisitos.
 
-O objetivo principal foi entregar algo funcional, organizado e simples de rodar.
+## Tecnologias utilizadas
 
-Tecnologias utilizadas:
+### Backend
+- Java 17
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- Hibernate
 
--Backend (API REST): Java 17, Spring Boot, Spring Web, Spring Data JPA, Hibernate.
--Frontend: Python 3.11, Flask, Jinja2 e Bootstrap.
--Banco: MySQL.
--Infraestrutura: Docker e Docker Compose.
+### Frontend
+- Python 3.11
+- Flask
+- Jinja2
+- Bootstrap
 
-Como executar:
+### Banco de dados
+- MySQL
+
+### Infraestrutura
+- Docker
+- Docker Compose
+
+## Como executar
 
 É necessário ter Docker e Docker Compose instalados.
 
-Para subir tudo:
+Para iniciar todos os serviços:
+
+```
 docker compose up --build
+```
 
-Depois disso:
-Frontend: http://localhost:5000
+Após a execução:
 
-Backend: http://localhost:8081
+- Frontend disponível em: http://localhost:5000  
+- Backend disponível em: http://localhost:8081  
+- MySQL é iniciado automaticamente no container
 
-O MySQL sobe automaticamente no container.
+## Funcionalidades
 
-Funcionalidades:
+### Empresas
+- Cadastro
+- Edição
+- Exclusão
+- Listagem
+- Validação de CEP
+- Preenchimento automático de estado (UF)
+- CNPJ único
 
-  Empresas:
-  
-  Cadastro, edição, exclusão e listagem
-  
-  Validação de CEP
-  
-  Preenchimento automático de estado
-  
-  CNPJ único
+### Fornecedores
+- Cadastro
+- Edição
+- Exclusão
+- Listagem
+- CPF/CNPJ único
+- Validação de CEP
+- Regras para pessoa física:
+  - RG obrigatório
+  - Data de nascimento obrigatória
+  - Bloqueio de cadastro para menores de idade quando vinculados a empresas do Paraná
 
-Fornecedores:
+### Vínculos
+- Associar fornecedor a empresa
+- Evitar vínculos duplicados
+- Remover vínculos
+- Listar fornecedores por empresa
 
-  Cadastro, edição, exclusão e listagem
-  
-  CPF/CNPJ único
-  
-  Validação de CEP
-  
-  Regras para PF (RG obrigatório, data de nascimento obrigatória e bloqueio de menores de idade no Paraná)
+## Interface do sistema
 
-Vínculos:
+- Formulários simples e diretos
+- Tabelas responsivas
+- Mensagens de erro e sucesso
+- Comunicação com o backend via API REST
 
-  Associar fornecedor a empresa
-  
-  Remover vínculo
-  
-  Evita vínculos duplicados
-  
-  Interface
+## Estrutura do projeto
 
-Tabelas e formulários simples e diretos
+```
+/
+├── backend-java/
+│   ├── models/
+│   ├── controllers/
+│   ├── repositories/
+│   └── ...
+├── app.py
+├── templates/
+├── static/
+├── docker-compose.yml
+├── Dockerfile.frontend
+├── requirements.txt
+└── README.md
+```
 
-Mensagens de erro e sucesso
+## Observações sobre o desenvolvimento
 
-Comunicação com o backend via API
+- Muitas tecnologias foram aprendidas ao longo do projeto.
+- A comunicação entre o backend Java e o frontend em Python foi feita via chamadas REST.
+- Toda a aplicação foi containerizada para facilitar a execução.
+- A validação de CEP utiliza duas APIs (cep.la e ViaCEP) para maior estabilidade.
+- Todas as regras propostas no desafio foram implementadas.
 
-Observações sobre o desenvolvimento:
+## Consideração final
 
-  Tive que aprender várias partes enquanto construía o projeto.
-  
-  A integração Python ↔ Java foi feita manualmente chamando a API.
-  
-  Toda a estrutura foi colocada em containers para facilitar a execução.
-  
-  A validação de CEP usa duas APIs para garantir mais estabilidade.
-  
-  As regras do desafio foram seguidas conforme o enunciado.
-  
-  O foco foi ser funcional e fácil de entender.
-
-Estrutura do projeto:
-
-backend-java
-static
-templates
-app.py
-docker-compose.yml
-Dockerfile.frontend
-README.md
-requirements.txt
-
-Consideração final
-
-Mesmo não conhecendo tudo no início, fui aprendendo e construindo até chegar numa solução completa e utilizável. O projeto reflete exatamente esse processo: estudo, tentativa e erro, ajuste e entrega.
-
+O projeto representa um processo de aprendizado contínuo, tentativa e erro, ajustes e entrega final.  
+A solução está funcional, organizada e pronta para ser executada através de containers.
