@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}Fornecedores{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-3">Cadastro de Fornecedores</h2>
+
+<div class="row g-4">
+
+    <!-- FORMULÁRIO -->
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">
+                Cadastrar fornecedor
+            </div>
+
+            <div class="card-body">
+                <form method="post" class="row g-3">
+
+                    <div class="col-12">
+                        <label class="form-label">Nome</label>
+                        <input type="text" name="nome" required class="form-control">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">CPF/CNPJ</label>
+                        <input type="text" name="cpfCnpj" maxlength="14" required class="form-control">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" name="email" required class="form-control">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">RG (se PF)</label>
+                        <input type="text" name="rg" class="form-control">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Data de nascimento (se PF)</label>
+                        <input type="date" name="dataNascimento" class="form-control">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">CEP</label>
+                        <input type="text" name="cep" maxlength="8" required class="form-control" placeholder="Digite apenas números">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Estado (UF)</label>
+                        <input type="text" name="estado" readonly
+                               class="form-control-plaintext border bg-light px-2">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Tipo de Pessoa</label>
+                        <select name="tipoPessoa" required class="form-select">
+                            <option value="">Selecione</option>
+                            <option value="PF">Pessoa Física</option>
+                            <option value="PJ">Pessoa Jurídica</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Salvar Fornecedor
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS + LISTA -->
+    <div class="col-lg-7">
+
+        <!-- FILTROS -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-header fw-semibold">
+                Filtros
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nome</label>
+                        <input type="text" name="nome" value="{{ filtro_nome }}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">CPF/CNPJ</label>
+                        <input type="text" name="cpfCnpj" value="{{ filtro_cpf }}" class="form-control">
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-outline-primary">
+                            Aplicar filtros
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- LISTA EM CARDS -->
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                <span>Lista de Fornecedores</span>
+                <span class="badge bg-light text-muted">
+                    {{ fornecedores|length }} registro(s)
+                </span>
+            </div>
+
+            <div class="card-body">
+                {% if fornecedores %}
+                <div class="row g-3">
+                    {% for f in fornecedores %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body pb-2">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <h6 class="mb-0">{{ f.nome }}</h6>
+                                    <span class="badge bg-secondary">{{ f.tipoPessoa }}</span>
+                                </div>
+                                <div class="small text-muted mb-2">ID #{{ f.id }}</div>
+
+                                <div class="small mb-1"><strong>CPF/CNPJ:</strong> {{ f.cpfCnpj }}</div>
+                                <div class="small mb-1"><strong>E-mail:</strong> {{ f.email }}</div>
+                                <div class="small mb-1">
+                                    <strong>RG:</strong> {{ f.rg or "-" }}
+                                </div>
+                                <div class="small mb-1">
+                                    <strong>Data Nasc.:</strong>
+                                    {% if f.dataNascimento %}
+                                        {{ f.dataNascimento[8:10] }}/{{ f.dataNascimento[5:7] }}/{{ f.dataNascimento[0:4] }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                                <div class="small mb-1">
+                                    <strong>CEP:</strong> {{ f.cep }}
+                                </div>
+                            </div>
+
+                            <div class="card-footer bg-white border-0 pt-0">
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('editar_fornecedor', fornecedor_id=f.id) }}"
+                                       class="btn btn-outline-secondary btn-sm w-50">
+                                        Editar
+                                    </a>
+                                    <form method="post"
+                                          action="{{ url_for('deletar_fornecedor', fornecedor_id=f.id) }}"
+                                          class="w-50"
+                                          onsubmit="return confirm('Tem certeza que deseja excluir este fornecedor?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <p class="text-muted mb-0">Nenhum fornecedor encontrado.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

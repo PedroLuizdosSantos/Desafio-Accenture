@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Editar Fornecedor{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-3">Editar Fornecedor</h2>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">
+                Fornecedor #{{ fornecedor.id }}
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+
+                    <div class="col-12">
+                        <label class="form-label">Nome</label>
+                        <input type="text"
+                               name="nome"
+                               required
+                               class="form-control"
+                               value="{{ fornecedor.nome }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">CPF/CNPJ</label>
+                        <input type="text"
+                               name="cpfCnpj"
+                               maxlength="14"
+                               required
+                               class="form-control"
+                               value="{{ fornecedor.cpfCnpj }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">E-mail</label>
+                        <input type="email"
+                               name="email"
+                               required
+                               class="form-control"
+                               value="{{ fornecedor.email }}">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">RG (se PF)</label>
+                        <input type="text"
+                               name="rg"
+                               class="form-control"
+                               value="{{ fornecedor.rg }}">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Data de nascimento (se PF)</label>
+                        <input type="date"
+                               name="dataNascimento"
+                               class="form-control"
+                               value="{{ fornecedor.dataNascimento }}">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">CEP</label>
+                        <input type="text"
+                               name="cep"
+                               id="cep-fornecedor-edit"
+                               maxlength="8"
+                               required
+                               placeholder="Digite apenas números"
+                               class="form-control"
+                               value="{{ fornecedor.cep }}">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Estado (UF)</label>
+                        <input type="text"
+                               name="estado"
+                               id="estado-fornecedor-edit"
+                               readonly
+                               class="form-control-plaintext border bg-light px-2"
+                               value="{{ fornecedor.estado }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Tipo de Pessoa</label>
+                        <select name="tipoPessoa" required class="form-select">
+                            <option value="">Selecione</option>
+                            <option value="PF" {% if fornecedor.tipoPessoa == "PF" %}selected{% endif %}>Pessoa Física</option>
+                            <option value="PJ" {% if fornecedor.tipoPessoa == "PJ" %}selected{% endif %}>Pessoa Jurídica</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <a href="{{ url_for('listar_fornecedores') }}"
+                           class="btn btn-outline-secondary w-100">
+                            Voltar
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Salvar alterações
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const cepInput = document.getElementById("cep-fornecedor-edit");
+    const estadoInput = document.getElementById("estado-fornecedor-edit");
+
+    if (!cepInput || !estadoInput) return;
+
+    // permitir apenas números
+    cepInput.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "");
+        const cep = this.value;
+
+        if (cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.erro) {
+                        estadoInput.value = data.uf || "";
+                    } else {
+                        estadoInput.value = "";
+                    }
+                })
+                .catch(() => estadoInput.value = "");
+        } else {
+            estadoInput.value = "";
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

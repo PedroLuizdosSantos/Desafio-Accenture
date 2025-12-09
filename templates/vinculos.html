@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Vínculos{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-3">Vínculo Empresa ↔ Fornecedor</h2>
+
+<div class="row g-4">
+
+    <!-- Criar vínculo -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">
+                Criar vínculo
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Empresa</label>
+                        <select name="empresa_id" required class="form-select">
+                            <option value="">Selecione</option>
+                            {% for e in empresas %}
+                            <option value="{{ e.id }}">{{ e.id }} – {{ e.nomeFantasia }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Fornecedor</label>
+                        <select name="fornecedor_id" required class="form-select">
+                            <option value="">Selecione</option>
+                            {% for f in fornecedores %}
+                            <option value="{{ f.id }}">{{ f.id }} – {{ f.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Vincular
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selecionar empresa + lista de fornecedores -->
+    <div class="col-lg-8">
+
+        <!-- Selecionar empresa -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-header fw-semibold">
+                Selecionar empresa
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label">Empresa</label>
+                        <select name="empresa_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">Selecione</option>
+                            {% for e in empresas %}
+                            <option value="{{ e.id }}" {% if empresa_id_selecionada|int == e.id %}selected{% endif %}>
+                                {{ e.id }} – {{ e.nomeFantasia }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <noscript>
+                            <button type="submit" class="btn btn-outline-primary w-100">Carregar</button>
+                        </noscript>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fornecedores da empresa selecionada em cards -->
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                <span>Fornecedores da empresa selecionada</span>
+                {% if fornecedores_da_empresa %}
+                    <span class="badge bg-light text-muted">
+                        {{ fornecedores_da_empresa|length }} vínculo(s)
+                    </span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if fornecedores_da_empresa %}
+                    <div class="row g-3">
+                        {% for f in fornecedores_da_empresa %}
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body pb-2">
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <h6 class="mb-0">{{ f.nome }}</h6>
+                                        <span class="badge bg-secondary">{{ f.tipoPessoa }}</span>
+                                    </div>
+                                    <div class="small text-muted mb-2">ID #{{ f.id }}</div>
+
+                                    <div class="small mb-1">
+                                        <strong>CPF/CNPJ:</strong> {{ f.cpfCnpj }}
+                                    </div>
+                                    <div class="small mb-1">
+                                        <strong>E-mail:</strong> {{ f.email }}
+                                    </div>
+                                </div>
+
+                                <div class="card-footer bg-white border-0 pt-0">
+                                    <form method="post"
+                                          action="{{ url_for('desvincular_vinculo') }}"
+                                          onsubmit="return confirm('Tem certeza que deseja desvincular este fornecedor desta empresa?');">
+                                        <input type="hidden" name="empresa_id" value="{{ empresa_id_selecionada }}">
+                                        <input type="hidden" name="fornecedor_id" value="{{ f.id }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                            Desvincular
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                {% elif empresa_id_selecionada %}
+                    <p class="m-3 text-muted">Essa empresa não possui fornecedores vinculados.</p>
+                {% else %}
+                    <p class="m-3 text-muted">Selecione uma empresa para visualizar seus fornecedores.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

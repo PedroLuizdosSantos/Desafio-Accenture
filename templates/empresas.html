@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Empresas{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-3">Cadastro de Empresas</h2>
+
+<div class="row g-4">
+    <!-- Formulário -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">
+                Cadastrar empresa
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">CNPJ</label>
+                        <input type="text" name="cnpj" maxlength="14" required class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Nome Fantasia</label>
+                        <input type="text" name="nomeFantasia" required class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">CEP</label>
+                        <input type="text" name="cep" id="cep-empresa" maxlength="8" required class="form-control" placeholder="Digite apenas números">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Estado (UF)</label>
+                        <input type="text"
+                               name="estado"
+                               id="estado-empresa"
+                               readonly
+                               class="form-control-plaintext border bg-light px-2">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Salvar Empresa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista em cards -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                <span>Lista de Empresas</span>
+                <span class="badge bg-light text-muted">
+                    {{ empresas|length }} registro(s)
+                </span>
+            </div>
+            <div class="card-body">
+                {% if empresas %}
+                <div class="row g-3">
+                    {% for e in empresas %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body pb-2">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <h6 class="mb-0">{{ e.nomeFantasia }}</h6>
+                                    <span class="badge bg-secondary">ID #{{ e.id }}</span>
+                                </div>
+
+                                <div class="small mb-1">
+                                    <strong>CNPJ:</strong> {{ e.cnpj }}
+                                </div>
+                                <div class="small mb-1">
+                                    <strong>CEP:</strong> {{ e.cep }}
+                                </div>
+                                <div class="small mb-1">
+                                    <strong>Estado:</strong> {{ e.estado }}
+                                </div>
+                            </div>
+
+                            <div class="card-footer bg-white border-0 pt-0">
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('editar_empresa', empresa_id=e.id) }}"
+                                       class="btn btn-outline-secondary btn-sm w-50">
+                                        Editar
+                                    </a>
+                                    <form method="post"
+                                          action="{{ url_for('deletar_empresa', empresa_id=e.id) }}"
+                                          class="w-50"
+                                          onsubmit="return confirm('Tem certeza que deseja excluir esta empresa?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <p class="text-muted mb-0 p-2">Nenhuma empresa cadastrada.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const cepInput = document.getElementById("cep-empresa");
+    const estadoInput = document.getElementById("estado-empresa");
+
+    if (!cepInput || !estadoInput) {
+        return;
+    }
+
+    cepInput.addEventListener("input", function () {
+        const cep = cepInput.value.replace(/\D/g, "");
+
+        if (cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.erro) {
+                        estadoInput.value = data.uf || "";
+                    } else {
+                        estadoInput.value = "";
+                    }
+                })
+                .catch(() => {
+                    estadoInput.value = "";
+                });
+        } else {
+            estadoInput.value = "";
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

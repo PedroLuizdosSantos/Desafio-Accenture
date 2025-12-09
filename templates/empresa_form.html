@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Editar Empresa{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-3">Editar Empresa</h2>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">
+                Empresa #{{ empresa.id }}
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">CNPJ</label>
+                        <input type="text"
+                               name="cnpj"
+                               maxlength="14"
+                               required
+                               class="form-control"
+                               value="{{ empresa.cnpj }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Nome Fantasia</label>
+                        <input type="text"
+                               name="nomeFantasia"
+                               required
+                               class="form-control"
+                               value="{{ empresa.nomeFantasia }}">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">CEP</label>
+                        <input type="text"
+                               name="cep"
+                               id="cep-empresa-edit"
+                               maxlength="8"
+                               required
+                               placeholder="Digite apenas números"
+                               class="form-control"
+                               value="{{ empresa.cep }}">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Estado (UF)</label>
+                        <input type="text"
+                               name="estado"
+                               id="estado-empresa-edit"
+                               readonly
+                               class="form-control-plaintext border bg-light px-2"
+                               value="{{ empresa.estado }}">
+                    </div>
+
+                    <div class="col-6">
+                        <a href="{{ url_for('listar_empresas') }}"
+                           class="btn btn-outline-secondary w-100">
+                            Voltar
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Salvar alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const cepInput = document.getElementById("cep-empresa-edit");
+    const estadoInput = document.getElementById("estado-empresa-edit");
+
+    if (!cepInput || !estadoInput) return;
+
+    // só números
+    cepInput.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "");
+        const cep = this.value;
+
+        if (cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.erro) {
+                        estadoInput.value = data.uf || "";
+                    } else {
+                        estadoInput.value = "";
+                    }
+                })
+                .catch(() => estadoInput.value = "");
+        } else {
+            estadoInput.value = "";
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
