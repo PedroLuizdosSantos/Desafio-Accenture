@@ -7,14 +7,14 @@ Eu não dominava várias das tecnologias usadas aqui (principalmente Spring Boot
 
 O objetivo principal foi entregar algo funcional, organizado e simples de rodar.
 
-Tecnologias utilizadas
+Tecnologias utilizadas:
 
-Backend (API REST): Java 17, Spring Boot, Spring Web, Spring Data JPA, Hibernate.
-Frontend: Python 3.11, Flask, Jinja2 e Bootstrap.
-Banco: MySQL.
-Infraestrutura: Docker e Docker Compose.
+-Backend (API REST): Java 17, Spring Boot, Spring Web, Spring Data JPA, Hibernate.
+-Frontend: Python 3.11, Flask, Jinja2 e Bootstrap.
+-Banco: MySQL.
+-Infraestrutura: Docker e Docker Compose.
 
-Como executar
+Como executar:
 
 É necessário ter Docker e Docker Compose instalados.
 
@@ -28,37 +28,37 @@ Backend: http://localhost:8081
 
 O MySQL sobe automaticamente no container.
 
-Funcionalidades
+Funcionalidades:
 
-Empresas
+  Empresas:
+  
+  Cadastro, edição, exclusão e listagem
+  
+  Validação de CEP
+  
+  Preenchimento automático de estado
+  
+  CNPJ único
 
-Cadastro, edição, exclusão e listagem
+Fornecedores:
 
-Validação de CEP
+  Cadastro, edição, exclusão e listagem
+  
+  CPF/CNPJ único
+  
+  Validação de CEP
+  
+  Regras para PF (RG obrigatório, data de nascimento obrigatória e bloqueio de menores de idade no Paraná)
 
-Preenchimento automático de estado
+Vínculos:
 
-CNPJ único
-
-Fornecedores
-
-Cadastro, edição, exclusão e listagem
-
-CPF/CNPJ único
-
-Validação de CEP
-
-Regras para PF (RG obrigatório, data de nascimento obrigatória e bloqueio de menores de idade no Paraná)
-
-Vínculos
-
-Associar fornecedor a empresa
-
-Remover vínculo
-
-Evita vínculos duplicados
-
-Interface
+  Associar fornecedor a empresa
+  
+  Remover vínculo
+  
+  Evita vínculos duplicados
+  
+  Interface
 
 Tabelas e formulários simples e diretos
 
@@ -66,21 +66,21 @@ Mensagens de erro e sucesso
 
 Comunicação com o backend via API
 
-Observações sobre o desenvolvimento
+Observações sobre o desenvolvimento:
 
-Tive que aprender várias partes enquanto construía o projeto.
+  Tive que aprender várias partes enquanto construía o projeto.
+  
+  A integração Python ↔ Java foi feita manualmente chamando a API.
+  
+  Toda a estrutura foi colocada em containers para facilitar a execução.
+  
+  A validação de CEP usa duas APIs para garantir mais estabilidade.
+  
+  As regras do desafio foram seguidas conforme o enunciado.
+  
+  O foco foi ser funcional e fácil de entender.
 
-A integração Python ↔ Java foi feita manualmente chamando a API.
-
-Toda a estrutura foi colocada em containers para facilitar a execução.
-
-A validação de CEP usa duas APIs para garantir mais estabilidade.
-
-As regras do desafio foram seguidas conforme o enunciado.
-
-O foco foi ser funcional e fácil de entender.
-
-Estrutura do projeto
+Estrutura do projeto:
 
 backend-java
 static
@@ -94,3 +94,4 @@ requirements.txt
 Consideração final
 
 Mesmo não conhecendo tudo no início, fui aprendendo e construindo até chegar numa solução completa e utilizável. O projeto reflete exatamente esse processo: estudo, tentativa e erro, ajuste e entrega.
+
